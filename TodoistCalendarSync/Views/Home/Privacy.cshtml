@@ -1,0 +1,62 @@
+﻿@using  TodoistCalendarSync.Models
+
+@model List<IntegrationModel>
+@{
+    ViewData["Title"] = "Integration list";
+}
+<div style="margin-left:30%">
+    <h1>@ViewData["Title"]</h1>
+
+    <p>Integration.</p>
+
+    <button class="btn btn-success popup" data-url="integration/integrate" data-toggle="modal" data-target="#modal-integrate" id="UserModel">
+        Integrate
+    </button>
+</div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <table class="table table-sm table-striped table-hover border-bottom">
+            <thead>
+                <tr>
+                    <th class="d-none d-lg-table-cell">
+                        Calendar Name
+                    </th>
+                    <th>
+                        Todoist Item
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="d-none d-lg-table-cell">
+                                @item.CalendarName
+                            </td>
+                            <td>
+                                @item.TodoistItemName
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            No integration found
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<partial name="Create_Modal" />
+@section Scripts{
+    <script src="~/js/popup.js" asp-append-version="true"></script>
+} 

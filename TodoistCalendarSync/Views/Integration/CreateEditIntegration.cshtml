@@ -1,0 +1,163 @@
+﻿@using  TodoistCalendarSync.Models
+
+@model IntegrationModel
+<!--Modal Body Start-->
+
+<div class="modal-content">
+
+    <!--Modal Header Start-->
+    <div class="modal-header">
+        <h4 class="modal-title">Integrate</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <!--Modal Header End-->
+
+
+    <form>
+
+       
+
+        <div class="modal-body form-horizontal">
+
+            <div class="form-group row">
+             @Html.LabelFor(model => model.OperationType, "Operation", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <input style="margin-top:6px;" type="radio" id="assignTask" name="type" />&nbsp;<label for="assignTask">Assign</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input style="margin-top:6px;" type="radio" id="unassignTask" name="type" />&nbsp;<label for="unassignTask">UnAssign</label>
+                </div>
+                </div>
+            <div class="form-group row">
+                @Html.HiddenFor(model => model.Id)
+                @Html.Label("GoogleCalendarId", "Calendar", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <select asp-for="@Model.GoogleCalendarId" id="calendarId" name="calendarId" class="form-control" asp-items="(IEnumerable<SelectListItem>)@ViewData["googleCalendarList"]">
+                        <option value="0">-- Select Calendar--</option>
+                    </select>
+                </div>
+                <span class="offset-3" id="calendarErr" style="display:none;color:red">Please select calendar. It is required</span>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.TodoistItemId, "Project", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <select multiple="multiple" asp-for="@Model.TodoistItemId" id="todoistItemId" name="todoistItemId" class="form-control" asp-items="(IEnumerable<SelectListItem>)@ViewData["todoistItemList"]">
+                    </select>
+                </div>
+                <span class="offset-3" id="projectErr" style="display:none;color:red">Please select project. It is required</span>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(model => model.IsFilter, "Filter", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <input style="margin-top:6px;" type="radio" id="allItems" name="isFilter" />&nbsp;<label for="allItems">All Items</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input style="margin-top:6px;" type="radio" id="isFilter" name="isFilter" />&nbsp;<label for="isFilter">Filter Items</label>
+                </div>
+            </div>
+            <div id="filterGroup" style="display:none">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Assignment</label>
+                    <div class="col-sm-10 col-md-8">
+                        <input style="margin-top:6px;" type="radio" id="notAssigned" name="filterByAssign" value="1" />&nbsp;<label for="notAssigned">Not Assigned</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input style="margin-top:6px;" type="radio" id="assignedMe" name="filterByAssign" value="2" />&nbsp;<label for="assignedMe">Assigned to me</label><br />
+                        <input style="margin-top:6px;" type="radio" id="assigned" name="filterByAssign" value="2" />&nbsp;<label for="assigned">Assigned to Others</label>
+
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Label</label>
+                    <div class="col-sm-10 col-md-8">
+                        <input style="margin-top:6px;" type="radio" id="label" name="filterByLabel" value="false" />&nbsp;<label for="label">Selected Lable</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input style="margin-top:6px;" type="radio" id="labelexcept" name="filterByLabel" value="true" />&nbsp;<label for="labelexcept">All except</label>
+                        <select multiple="multiple" asp-for="@Model.LabelIds" id="labelIds" name="labelIds" class="form-control" asp-items="(IEnumerable<SelectListItem>)@ViewData["todoistLabels"]">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Priority</label>
+                    <div class="col-sm-10 col-md-8">
+                        <input style="margin-top:6px;" type="radio" id="priority" name="filterByPriority" value="false" />&nbsp;<label for="priority">Selected priority</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input style="margin-top:6px;" type="radio" id="priorityexcept" name="filterByPriority" value="true" />&nbsp;<label for="priorityexcept">All except</label>
+                        <select multiple="multiple" id="priorityIds" name="priorityIds" class="form-control">
+                            <option value="4">Priority 1</option>
+                            <option value="3">Priority 2</option>
+                            <option value="2">Priority 3</option>
+                            <option value="1">Priority 4</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div id="groupByAssign">
+            <div class="form-group row">
+                @Html.LabelFor(model => model.CompletedOptions, "Options", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <input style="margin-top:6px;" type="radio" id="delete" name="completeoptions" />&nbsp;<label for="delete">Delete</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input style="margin-top:6px;" type="radio" id="keep" name="completeoptions" />&nbsp;<label for="keep">Keep</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input style="margin-top:6px;" type="radio" id="changeColor" name="completeoptions" />&nbsp;<label for="changeColor">change color</label><br />
+                    <input style="margin-top:6px;" type="radio" id="move" name="completeoptions" />&nbsp;<label for="move">Move</label>
+                </div>
+            </div>
+            <div class="form-group row" style="display:none" id="colorChangeDiv">
+                @Html.LabelFor(model => model.ColorChange, "Color", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                      <select asp-for="@Model.ColorChange" id="colorChange" name="colorChange" class="form-control">
+                        <option value="0">-- Select Color--</option>
+                        <option value="1">Blue</option>
+                        <option value="2">Green</option>
+                        <option value="3">Purple</option>
+                        <option value="4">Red</option>
+                        <option value="15">Yellow</option>
+                        <option value="6">Orange</option>
+                        <option value="7">Turquoise</option>
+                        <option value="8">Gray</option>
+                        <option value="9">Bold blue</option>
+                        <option value="10">Bold green</option>
+                        <option value="10">Bold red</option>
+
+                    </select>
+                 </div>
+                 <span class="offset-3" id="colorErr" style="display:none;color:red">Please select color. It is required</span>
+            </div>
+
+            <div class="form-group row" style="display:none" id="moveCalendarDiv">
+                @Html.LabelFor(model => model.MoveCalendarId, "Move to Calendar", new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-10 col-md-8">
+                    <select asp-for="@Model.MoveCalendarId" id="moveCalendarId" name="moveCalendarId" class="form-control" asp-items="(IEnumerable<SelectListItem>)@ViewData["todoistItemList"]">
+                        <option value="0">-- Select Calendar--</option>
+                    </select>
+                </div>
+                <span class="offset-3" id="moveCalendarErr" style="display:none;color:red">Please select a calendar to move to. It is required</span>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Label</label>
+                <div class="col-sm-10 col-md-8">
+                    <input id="newLabel" name="newLabel" />
+                </div>
+                <span class="offset-3" id="labelErr" style="display:none;color:red">Please insert label. It is required</span>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Druation</label>
+                <div class="col-sm-10 col-md-8">
+                    <input id="duration" name="duration" />
+                </div>
+                <span class="offset-3" id="durationErr" style="display:none;color:red">Please select duration. It is required</span>
+            </div>
+    </div>
+        </div>
+            <!--Modal Footer Start-->
+            <div class="modal-footer">
+                <button data-dismiss="modal" id="cancel" class="btn btn-default" type="button">Cancel</button>
+                <button class="btn btn-success relative" data-url="integration/integrate" id="btnSubmit">
+                    <i class="loader"></i>
+                    Submit
+                </button>
+            </div>
+            <!--Modal Footer End-->
+</form>
+
+</div>
+
+
+<!--Modal Body End-->  
