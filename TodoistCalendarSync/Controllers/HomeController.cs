@@ -319,7 +319,7 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
                                     {
                                         
                                         //save the change in todoist to google calendar
-                                        string dueDate = proj.start != null ? proj.start.dateTime.Substring(0,10) : DateTime.Now.ToString("yyyy-MM-dd").Substring(0,10);
+                                        string dueDate = proj.start != null && proj.start.dateTime != null ? proj.start.dateTime.Substring(0,10) : DateTime.Now.ToString("yyyy-MM-dd").Substring(0,10);
                                         var postBody = "{ \"content\":\"" + proj.summary+"\", \"due_date\":\""+ dueDate+"\", \"X-Request-Id\": \"123456789\", \"project_id\": " + long.Parse(element.TodoistItemId) + "}";
                                         byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(postBody);
                                         var content = new ByteArrayContent(messageBytes);

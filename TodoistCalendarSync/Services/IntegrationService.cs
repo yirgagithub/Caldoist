@@ -55,7 +55,7 @@ namespace TodoistCalendarSync.Services
                                     end
                             ELSE
                                 begin 
-                                    UPDATE Integration set calendarName = @calendarName, todoistItemName = @todoistItemName, label = @label
+                                    UPDATE Integration set calendarName = @calendarName, todoistItemName = @todoistItemName, label = @label,
                                                             completedoptions = @completedoptions, colorChange = @colorChange, moveCalendarId = @moveCalendarId
                                     WHERE id = @id
                                 end";
@@ -69,6 +69,7 @@ namespace TodoistCalendarSync.Services
             parameters.Add("completedoptions", integrationModel.CompletedOptions);
             parameters.Add("colorChange", integrationModel.ColorChange);
             parameters.Add("moveCalendarId", integrationModel.MoveCalendarId);
+            parameters.Add("label", integrationModel.NewLabel);
 
             using (var connection = _context.CreateConnection())
             {
