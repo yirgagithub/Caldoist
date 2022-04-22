@@ -44,6 +44,7 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
         private readonly GoogleCalendarInterface _googleCalendar;
         private readonly TodoistInterface _todoistInterface;
 
+        static readonly object _object = new object();
 
         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, IUserSession userSession,
             IIntegrationInterface integrationInterface, IGoogleAuthProvider auth, GoogleCalendarInterface googleCalendar,
@@ -82,6 +83,11 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Index");
+        }
 
         public IActionResult IntegrationHome()
         {
@@ -325,6 +331,10 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
                                         var content = new ByteArrayContent(messageBytes);
                                         content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                                         httpClient.SetBearerToken(accessCode);
+
+                                        if (!taskId.Equals(""))
+                                            await _integrationInterface.SaveTaskEventHistory(taskId, proj.id, email);
+
                                         _logger.LogInformation("before post request to add changes to todoist ");
                                         var result = await httpClient.PostAsync("https://api.todoist.com/rest/v1/tasks", content);
 
@@ -340,8 +350,7 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
 
                                         await _integrationInterface.SaveHistory("Todoist", element.TodoistItemId, proj.summary, email);
 
-                                        if (!taskId.Equals(""))
-                                            await _integrationInterface.SaveTaskEventHistory(taskId, proj.id, email);
+                                      
                                     }
                                     else
                                     {
