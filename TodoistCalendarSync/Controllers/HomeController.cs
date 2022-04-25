@@ -501,7 +501,7 @@ namespace RoundTheCode.GoogleAuthentication.Controllers
                                 {
                                     var events = await _integrationInterface.GetTaskEventHistoryById("Task", email, todoistTask.id);
 
-                                    if (events != null && (events[0].Createdat - DateTime.Now).TotalMinutes > 2)
+                                    if (events != null && events.Count > 0 && (events[0].Createdat - DateTime.Now).TotalMinutes > 2)
                                     {
                                         foreach (var calendar in integrationList)
                                         {

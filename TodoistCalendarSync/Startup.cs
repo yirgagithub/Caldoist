@@ -42,6 +42,9 @@ namespace  Hopesoftware.TodoistCalendarSync
             options.ClientSecret = "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";
         });
 
+           services.AddMvc().AddNewtonsoftJson();
+
+
             services.AddSingleton<ApplicationDbContext>();
             services.AddScoped<IUserSession, UserSession>();
             services.AddScoped<IIntegrationInterface, IntegrationService>();
